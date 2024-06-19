@@ -4,28 +4,25 @@ import numpy as np
 TABULEIRO = np.full((3, 3), ' ')
 
 def jogada(jogador, símbolo, linha1, linha2, linha3):
-    global TABULEIRO  # Indicando que estamos referenciando a variável global TABULEIRO
+    """
+    Executa uma jogada para o jogador atual no jogo da velha.
 
-    idx1 = {"1": 0,
-            "2": 0,
-            "3": 0,
-            "4": 1,
-            "5": 1,
-            "6": 1, 
-            "7": 2,
-            "8": 2, 
-            "9": 2}
-    
-    idx2 = {"1": 0,
-            "2": 1,
-            "3": 2,
-            "4": 0,
-            "5": 1,
-            "6": 2, 
-            "7": 0,
-            "8": 1, 
-            "9": 2}
-    
+    Parâmetros:
+    jogador (str): Nome do jogador atual.
+    símbolo (str): Símbolo ('x' ou 'o') do jogador atual.
+    linha1 (str): String formatada da primeira linha do tabuleiro.
+    linha2 (str): String formatada da segunda linha do tabuleiro.
+    linha3 (str): String formatada da terceira linha do tabuleiro.
+
+    Atualiza o tabuleiro global TABULEIRO com o símbolo na posição escolhida pelo jogador.
+    Exibe o tabuleiro atualizado após a jogada.
+    """
+    global TABULEIRO  # Referenciando a variável global TABULEIRO
+
+    # Dicionários para mapear posição do teclado numérico para índices da matriz TABULEIRO
+    idx1 = {"1": 0, "2": 0, "3": 0, "4": 1, "5": 1, "6": 1, "7": 2, "8": 2, "9": 2}
+    idx2 = {"1": 0, "2": 1, "3": 2, "4": 0, "5": 1, "6": 2, "7": 0, "8": 1, "9": 2}
+
     while True:
         try:
             posição = int(input(f"{jogador} - Digite a posição: "))
@@ -36,68 +33,12 @@ def jogada(jogador, símbolo, linha1, linha2, linha3):
             print("\nVocê deve digitar um número de 1 a 9!\n")
             continue
         
-        if posição == "1":
-            if TABULEIRO[idx1["1"]][idx2["1"]] in ["x", "o"]:
+        if posição in idx1 and posição in idx2:
+            if TABULEIRO[idx1[posição]][idx2[posição]] in ["x", "o"]:
                 print("\nPosição já preenchida!\n")
                 continue
             else:
-                TABULEIRO[idx1["1"]][idx2["1"]] = símbolo
-
-        elif posição == "2":
-            if TABULEIRO[idx1["2"]][idx2["2"]] in ["x", "o"]:
-                print("\nPosição já preenchida!\n")
-                continue
-            else:
-                TABULEIRO[idx1["2"]][idx2["2"]] = símbolo
-
-        elif posição == "3":
-            if TABULEIRO[idx1["3"]][idx2["3"]] in ["x", "o"]:
-                print("\nPosição já preenchida!\n")
-                continue
-            else:
-                TABULEIRO[idx1["3"]][idx2["3"]] = símbolo
-
-        elif posição == "4":
-            if TABULEIRO[idx1["4"]][idx2["4"]] in ["x", "o"]:
-                print("\nPosição já preenchida!\n")
-                continue
-            else:
-                TABULEIRO[idx1["4"]][idx2["4"]] = símbolo
-
-        elif posição == "5":
-            if TABULEIRO[idx1["5"]][idx2["5"]] in ["x", "o"]:
-                print("\nPosição já preenchida!\n")
-                continue
-            else:
-                TABULEIRO[idx1["5"]][idx2["5"]] = símbolo
-
-        elif posição == "6":
-            if TABULEIRO[idx1["6"]][idx2["6"]] in ["x", "o"]:
-                print("\nPosição já preenchida!\n")
-                continue
-            else:
-                TABULEIRO[idx1["6"]][idx2["6"]] = símbolo
-
-        elif posição == "7":
-            if TABULEIRO[idx1["7"]][idx2["7"]] in ["x", "o"]:
-                print("\nPosição já preenchida!\n")
-                continue
-            else:
-                TABULEIRO[idx1["7"]][idx2["7"]] = símbolo
-
-        elif posição == "8":
-            if TABULEIRO[idx1["8"]][idx2["8"]] in ["x", "o"]:
-                print("\nPosição já preenchida!\n")
-                continue
-            else:
-                TABULEIRO[idx1["8"]][idx2["8"]] = símbolo
-
-        elif posição == "9":
-            if TABULEIRO[idx1["9"]][idx2["9"]] in ["x", "o"]:
-                print("\nPosição já preenchida!\n")
-                continue
-            else:
-                TABULEIRO[idx1["9"]][idx2["9"]] = símbolo
+                TABULEIRO[idx1[posição]][idx2[posição]] = símbolo
         
         linha1, linha2, linha3 = atualiza_tabuleiro(linha1, linha2, linha3)
         imprimir_tabuleiro(linha1, linha2, linha3)
@@ -105,6 +46,12 @@ def jogada(jogador, símbolo, linha1, linha2, linha3):
         break
 
 def checkagem_vencedor():
+    """
+    Verifica se houve um vencedor no jogo da velha.
+
+    Retorna:
+    bool: True se houver um vencedor, False caso contrário.
+    """
     # Verifica se as linhas possuem elementos iguais
     for linha in TABULEIRO:
         if linha[0] == linha[1] == linha[2] and linha[0] in ["x", "o"]:
@@ -123,10 +70,16 @@ def checkagem_vencedor():
     if TABULEIRO[0][2] == TABULEIRO[1][1] == TABULEIRO[2][0] and TABULEIRO[0][2] in ["x", "o"]:
         return True
     
-    # Caso nenhuma linha, coluna ou diagonal possuam elementos iguais, a função retornará False indicando que não há vencedor
+    # Caso nenhuma linha, coluna ou diagonal possuam elementos iguais, retorna False indicando que não há vencedor
     return False
 
 def fim_de_jogo():
+    """
+    Verifica se o jogo da velha chegou ao fim (tabuleiro completo).
+
+    Retorna:
+    bool: True se o jogo terminou empatado, False caso contrário.
+    """
     for linha in TABULEIRO:
         for elemento in linha:
             if elemento == ' ':
@@ -134,6 +87,14 @@ def fim_de_jogo():
     return True
 
 def imprimir_tabuleiro(ln1, ln2, ln3):
+    """
+    Imprime o estado atual do tabuleiro do jogo da velha.
+
+    Parâmetros:
+    ln1 (str): Primeira linha formatada do tabuleiro.
+    ln2 (str): Segunda linha formatada do tabuleiro.
+    ln3 (str): Terceira linha formatada do tabuleiro.
+    """
     quebra = "---+---+---"
     print()
     print(ln1)
@@ -144,6 +105,17 @@ def imprimir_tabuleiro(ln1, ln2, ln3):
     print()
 
 def atualiza_tabuleiro(ln1, ln2, ln3):
+    """
+    Atualiza as strings formatadas das linhas do tabuleiro com o estado atual do TABULEIRO.
+
+    Parâmetros:
+    ln1 (str): Primeira linha formatada do tabuleiro.
+    ln2 (str): Segunda linha formatada do tabuleiro.
+    ln3 (str): Terceira linha formatada do tabuleiro.
+
+    Retorna:
+    tuple: Tupla contendo as strings atualizadas das linhas do tabuleiro.
+    """
     ln1 = f" {TABULEIRO[0][0]} | {TABULEIRO[0][1]} | {TABULEIRO[0][2]} "
     ln2 = f" {TABULEIRO[1][0]} | {TABULEIRO[1][1]} | {TABULEIRO[1][2]} "
     ln3 = f" {TABULEIRO[2][0]} | {TABULEIRO[2][1]} | {TABULEIRO[2][2]} "
